@@ -1,0 +1,16 @@
+{
+  "name": "nodejs",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "express": "^4.17.3",
+    "follow-redirects": "^1.14.9"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon app/app.js"
+  }
+}
