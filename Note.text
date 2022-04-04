@@ -1,0 +1,101 @@
+1) (req.query) => query is a method 
+    kisi bhi (get/post) Request ke jo bhi params(paramter) me hota hai use dikha sakta hai.
+
+2) what ever we passed in (params), its reflecded in the url.
+
+3) clg(req.header) => using this, we can console the headers.
+
+4)  console.log(req.body); => using this, we can console the body.
+
+5) req.json  is  similer to  req.send 
+    *diff => it only read json data. 
+
+
+
+
+
+####################################### lecture for understanding ################################
+
+const express = require("express");
+
+const app = express();
+
+const PORT = 8080;
+
+/*
+  Middle ware
+  * We can make our own middle ware, as per our requirement.
+  1) express.json() -> pre-defined.
+*/
+
+const isvaliedUser = (req, res, next) => {
+  const { user } = req.body;
+  //Checks
+  if (!user)
+    return res.json({
+      user: null,
+      massage: "User cann't be null",
+      success: false,
+    });
+  if (users.includes(user))
+    return res.json({
+      user: null,
+      massage: "User already exists !",
+      success: false,
+    });
+
+  next();
+};
+app.use(express.json());
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>> Routes started <<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+app.get("/", (req, res) => {
+  // console.log(req.query);
+  res.send("This is home Rought");
+});
+
+app.post("/", (req, res) => {
+  console.log(req.query);
+  res.send("this request send from post");
+  console.log(req.body);
+});
+
+const users = [];
+
+app.get("/users", (req, res) => {
+  try {
+    if (users.includes("user")) return res.json({ massage: "User null" });
+    res.json({ users, massage: "Users Fetched", success: true });
+  } catch (error) {
+    console.log(error);
+    res.json({ users: [], massage: "Error grtting users", success: false });
+  }
+});
+
+app.post("/users", isvaliedUser, (req, res) => {
+  try {
+    const { user } = req.body;
+
+    // Pushing(adding) data into users variable
+    users.push(user);
+    res.json({
+      user,
+      massage: "User added",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      user: null,
+      massage: "User Failed to add",
+      success: false,
+    });
+  }
+});
+
+/* >>>>>>>>>>>>>>>>>>>> Routes Ended ! <<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+app.listen(PORT, () => {
+  console.log(`Express server listening at ${PORT}`);
+});
